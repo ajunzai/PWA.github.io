@@ -16,10 +16,10 @@ self.addEventListener("fetch", (event) => {
       return (
         resp ||
         fetch(event.request).then((response) => {
-          caches.open(CACHE_NAME).then((cache) => {
+          return caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, response.clone())
+            return response
           })
-          return response
         })
       )
     })
