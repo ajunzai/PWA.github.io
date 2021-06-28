@@ -4,7 +4,6 @@ const CACHE_URLS = [
     '/',
     'index.html',
     'main.css',
-    'youhun.jpg'
 ]
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -28,20 +27,14 @@ self.addEventListener('fetch', (event) => {
     )
 })
 
-function clearStaleCache() {
-    return caches.keys().then(keys => {
-        keys.forEach(key => {
-            if (CACHE_NAME !=key) {
-                caches.delete(key)
-            }
-        })
-    })
-}
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        Promise.all([
-            clearStaleCache,
-            self.clients.claim()
-        ])
+        caches.keys().then(keys => {
+            return Promise.all(keys.forEach(key => {
+                if (CACHE_NAME !=key) {
+                    caches.delete(key)
+                }
+            }))
+        }).then(() => self.clients.claim())
     )
 })
